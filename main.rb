@@ -1,6 +1,14 @@
 require "simplex"
-require "cargarModelo.rb"
+require_relative "modelo.rb"
 
-simplex = simplex.new(modelo[0], modelo[1], modelo[2])
+modelo = Modelo.new
 
-puts "Solucion: #{simplex2.solution}"
+carga = modelo.cargar
+
+funcion_objetivo = carga[0]
+restricciones = carga[1]
+rhs = carga[2]
+
+simplex = Simplex.new(funcion_objetivo, restricciones, rhs)
+
+puts "Solucion: #{simplex.solution}"
