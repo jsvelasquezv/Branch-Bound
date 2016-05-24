@@ -1,14 +1,27 @@
-require "simplex"
 require_relative "modelo.rb"
 
 modelo = Modelo.new
 
-carga = modelo.cargar
+p modelo.z
+p modelo.solucion
 
-funcion_objetivo = carga[0]
-restricciones = carga[1]
-rhs = carga[2]
 
-simplex = Simplex.new(funcion_objetivo, restricciones, rhs)
 
-puts "Solucion: #{simplex.solution}"
+
+# indice_cambio = 0
+# solucion1.each do |e| 
+#   if e.modulo(1) != 0  
+#     indice_cambio = solucion1.index(e)
+#     break
+#   end
+# end
+
+
+# # restriccion1 = {"x#{indice_cambio}" => - solucion1[indice_cambio].ceil}
+# # restriccion2 = {"x#{indice_cambio}" => solucion1[indice_cambio].floor}
+
+# # puts restriccion1
+# # puts restriccion2
+
+
+# puts "Solucion: #{simplex.solution}"

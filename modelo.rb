@@ -1,11 +1,12 @@
+require "simplex"
+
 class Modelo
 
   attr_accessor :input, :cantidad_aldeas, :tipos_aviones, :hash_basico, :restricciones,
-                :hash_variables, :funcion_objetivo, :RHS
-
+                :hash_variables, :funcion_objetivo, :RHS, :z, :solucion
   def initialize()
     @input = []
-    @hash_basico = {} # Hass lleno de 0 para hacer merge con las restricciones
+    @hash_basico = {} # Hash lleno de 0 para hacer merge con las restricciones
     @hash_variables = {} # Hash que contiene todas las variables de las restricciones
     @funcion_objetivo = [] # Arreglo con los coeficientes de la funcion objetivo
     @RHS = [] # Arreglo con los valores a la derecha de las desigualdades
@@ -19,10 +20,14 @@ class Modelo
 
     iniciar_hash_basico
     iniciar_hash_variables
-  end
 
-  def cargar
-    return obtenerFuncionObjetivo, obtenerRestricciones, obtenerRHS
+    obtenerFuncionObjetivo 
+    obtenerRestricciones
+    obtenerRHS
+
+    simplex = Simplex.new(@funcion_objetivo, @restricciones, @RHS)
+    @solucion = simplex.solution
+    calcular_z
   end
 
   private
@@ -82,9 +87,12 @@ class Modelo
   end
 
   def iniciar_hash_variables
-    variables = input.slice(1, @input.size - 3).reduce(:+).tr("\n", ' ').split.map(&:to_i)
     (@cantidad_aldeas * @tipos_aviones).times do |i|
-      @hash_variables["x#{i}"] = variables[i]
+      @hash_variables["x#{i}"] = 1
     end
+  end
+
+  def calcular_z
+    @z = (0...@funcion_objetivo.count).inject(0) {|r, i| r + @funcion_objetivo[i] * @solucion[i]}
   end
 end
