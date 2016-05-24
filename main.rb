@@ -1,9 +1,16 @@
 require_relative "modelo.rb"
 
 modelo = Modelo.new
+modelo.calcular_solucion
 
-p modelo.z
-p modelo.solucion
+# print modelo.restricciones
+# modelo.agregar_restriccion("x14", 20)
+# print modelo.restricciones
+
+# p modelo.z
+# p modelo.solucion
+
+arbol = []
 
 
 
@@ -22,6 +29,7 @@ p modelo.solucion
 
 # # puts restriccion1
 # # puts restriccion2
+
 
 
 # puts "Solucion: #{simplex.solution}"

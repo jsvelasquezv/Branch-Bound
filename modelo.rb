@@ -11,7 +11,6 @@ class Modelo
     @funcion_objetivo = [] # Arreglo con los coeficientes de la funcion objetivo
     @RHS = [] # Arreglo con los valores a la derecha de las desigualdades
     @restricciones = [] # Arreglo con los coeficientes de las restricciones
-    @modelo = [] # Arreglo que contiene: funcion objetivo, restricciones, RHS
 
     leerArchivo
 
@@ -24,10 +23,18 @@ class Modelo
     obtenerFuncionObjetivo 
     obtenerRestricciones
     obtenerRHS
+  end
 
+  def calcular_solucion
     simplex = Simplex.new(@funcion_objetivo, @restricciones, @RHS)
     @solucion = simplex.solution
     calcular_z
+  end
+
+  def agregar_restriccion(variable, valor)
+    restriccion = hash_basico
+    restriccion[variable] = valor
+    @restricciones.push(restriccion.values)
   end
 
   private
