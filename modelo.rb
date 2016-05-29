@@ -4,6 +4,7 @@ class Modelo
 
   attr_accessor :input, :cantidad_aldeas, :tipos_aviones, :hash_basico, :restricciones,
                 :hash_variables, :funcion_objetivo, :RHS, :z, :solucion
+                
   def initialize()
     @input = []
     @hash_basico = {} # Hash lleno de 0 para hacer merge con las restricciones
@@ -12,6 +13,9 @@ class Modelo
     @RHS = [] # Arreglo con los valores a la derecha de las desigualdades
     @restricciones = [] # Arreglo con los coeficientes de las restricciones
 
+  end
+
+  def inicializar
     leerArchivo
 
     @cantidad_aldeas = @input[0][0].to_i
@@ -31,10 +35,11 @@ class Modelo
     calcular_z
   end
 
-  def agregar_restriccion(variable, valor)
+  def agregar_restriccion(coeficiente, variable, valor)
     restriccion = hash_basico
-    restriccion[variable] = valor
+    restriccion[variable] = coeficiente
     @restricciones.push(restriccion.values)
+    @RHS.push(valor)
   end
 
   private
@@ -48,11 +53,11 @@ class Modelo
   end
 
   def obtenerFuncionObjetivo
-    @funcion_objetivo = @input.slice(1, @input.size - 3).reduce(:+).tr("\n", ' ').split.map(&:to_i)
+    @funcion_objetivo = @input.slice(1, @input.size - 3).reduce(:+).tr("\n", ' ').split.map(&:to_f)
   end
 
   def obtenerRHS
-    @RHS = @input.slice(@input.size - 2, @input.size - 1).reduce(:+).tr("\n", ' ').split.map(&:to_i)
+    @RHS = @input.slice(@input.size - 2, @input.size - 1).reduce(:+).tr("\n", ' ').split.map(&:to_f)
   end
 
   def obtenerRestricciones
