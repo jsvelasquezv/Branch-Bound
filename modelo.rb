@@ -3,7 +3,7 @@ require "simplex"
 class Modelo
 
   attr_accessor :input, :cantidad_aldeas, :tipos_aviones, :hash_basico, :restricciones,
-                :hash_variables, :funcion_objetivo, :RHS, :z, :solucion
+                :hash_variables, :funcion_objetivo, :RHS, :z, :solucion, :entero
                 
   def initialize()
     @input = []
@@ -15,8 +15,8 @@ class Modelo
 
   end
 
-  def inicializar
-    leerArchivo
+  def inicializar(archivo)
+    leerArchivo(archivo)
 
     @cantidad_aldeas = @input[0][0].to_i
     @tipos_aviones = @input[0][2].to_i
@@ -33,6 +33,7 @@ class Modelo
     simplex = Simplex.new(@funcion_objetivo, @restricciones, @RHS)
     @solucion = simplex.solution
     calcular_z
+    @entero = @solucion.all? { |variable| variable.modulo(1) == 0 }
   end
 
   def agregar_restriccion(coeficiente, variable, valor)
@@ -44,12 +45,14 @@ class Modelo
 
   private
 
-  def leerArchivo
-    File.open('input.txt', 'r') do |f|
-      f.each_line do |line|
-        @input.push(line)
-      end
-    end
+  def leerArchivo(archivo)
+    # File.open('archivo', 'r') do |f|
+    #   f.each_line do |line|
+    #     @input.push(line)
+    #   end
+    # end
+
+     IO.foreach(archivo) {|x| @input.push(x) }
   end
 
   def obtenerFuncionObjetivo
@@ -108,3 +111,8 @@ class Modelo
     @z = (0...@funcion_objetivo.count).inject(0) {|r, i| r + @funcion_objetivo[i] * @solucion[i]}
   end
 end
+
+# m = Modelo.new
+# m.inicializar("input.txt")
+# m.calcular_solucion
+# p m.solucion
