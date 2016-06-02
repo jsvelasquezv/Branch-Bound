@@ -3,7 +3,7 @@ require "gtk3"
 require_relative "modelo.rb"
 
 archivo = ""
-solucion = ""
+solucion = {}
 
 # def crear_restriccion(modelo)
 #   no_entero = []
@@ -98,26 +98,21 @@ app.signal_connect "activate" do |application|
   
   button = Gtk::Button.new(label: "Cargar")
   button2 = Gtk::Button.new(label: "Resolver")
-  label = Gtk::Label.new "The only victory over love is flight."
-  
   
   button.signal_connect "clicked" do |widget|
     if dialog.run == Gtk::ResponseType::ACCEPT
-      puts archivo = File.basename(dialog.filename)
+      archivo = File.basename(dialog.filename)
     end
     dialog.destroy
   end
 
-  
   button2.signal_connect "clicked" do |widget|
     modelo = Modelo.new
     modelo.inicializar(archivo)
     modelo.calcular_solucion
-    p modelo.solucion
-    puts modelo.z
-
-    # md = Gtk::MessageDialog.new(window, nil, :type => :info, :buttons_type => :close, 
-    #   :message => "Download completed")
+    modelo.solucion.each_with_index { |e, i| solucion["x#{i}"] = e }
+    p solucion
+    p "Z = #{modelo.z}"
   end
 
   button_box.add(button)
